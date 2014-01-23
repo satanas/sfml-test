@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #define MAX_FRAME_SAMPLES 30
-#define MAX_SPRITES 100
+#define MAX_SPRITES 200
 
 int frames_count = 0;
 float fps = 0.0;
@@ -66,7 +66,7 @@ int main(int, char const**) {
     }
 
     std::vector<sf::Sprite> sprites(MAX_SPRITES);
-    for (int i=0; i<=MAX_SPRITES; i++) {
+    for (int i=0; i<MAX_SPRITES; i++) {
         sprites[i].setTexture(barrel);
         int x = rand() % width;
         int y = rand() % height;
@@ -86,7 +86,7 @@ int main(int, char const**) {
         fps.setString(sf::String(buff));
 
 
-        for (int i=0; i<=MAX_SPRITES; i++) {
+        for (int i=0; i<MAX_SPRITES; i++) {
             sf::Sprite s = sprites[i];
             s.setScale(rand() % 2 + 1, 2);
             s.setRotation((rand() % 720) - 360);
