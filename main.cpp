@@ -1,8 +1,11 @@
 #include <SFML/Graphics.hpp>
 
 int main(int, char const**) {
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My First SFML example");
+    sf::RenderWindow window(sf::VideoMode(1000, 600), "My First SFML example", sf::Style::Default, settings);
     //window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 
@@ -17,6 +20,10 @@ int main(int, char const**) {
     text.setCharacterSize(24);
     text.setColor(sf::Color::White);
 
+    sf::CircleShape shape(50);
+    shape.setFillColor(sf::Color(100, 250, 50));
+    shape.setPosition(50, 50);
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -27,6 +34,7 @@ int main(int, char const**) {
         window.clear(sf::Color::Black);
 
         window.draw(text);
+        window.draw(shape);
 
         window.display();
     }
