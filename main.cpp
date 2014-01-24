@@ -7,7 +7,7 @@
 
 #define MAX_FRAME_SAMPLES 30
 #define MAX_SPRITES 1000
-static const float SCALE = 30.0f;
+static const float SCALE = 32.0f;
 
 int frames_count = 0;
 float fps = 0.0;
@@ -28,14 +28,14 @@ float framesPerSecond(sf::Clock & clock) {
     return fps;
 }
 
-void createGround(b2World& world, float x, float y) {
+void createGround(b2World& world) {
     b2BodyDef bodyDef;
-    bodyDef.position = b2Vec2(x, y);
+    bodyDef.position = b2Vec2(40.0f, 18.75f);
     bodyDef.type = b2_staticBody;
     b2Body* body = world.CreateBody(&bodyDef);
 
     b2PolygonShape shape;
-    shape.SetAsBox(33.f, -1.0f);
+    shape.SetAsBox(40.f, 1.0f);
     b2FixtureDef fixtureDef;
     fixtureDef.density = 0.0f;
     fixtureDef.shape = &shape;
@@ -49,7 +49,7 @@ void createBox(b2World& world, int mouseX, int mouseY) {
     b2Body* body = world.CreateBody(&bodyDef);
 
     b2PolygonShape shape;
-    shape.SetAsBox(30.0f/SCALE, 30.0f/SCALE);
+    shape.SetAsBox(0.5f, 0.5f);
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1.f;
     fixtureDef.friction = 0.7f;
@@ -89,7 +89,7 @@ int main(int, char const**) {
     sf::Text fps;
     fps.setFont(font);
     fps.setCharacterSize(20);
-    fps.setColor(sf::Color::White);
+    fps.setColor(sf::Color::Black);
 
     sf::Texture barrel;
     if (!barrel.loadFromFile("barrel.png")) {
@@ -108,13 +108,16 @@ int main(int, char const**) {
     b2Vec2 gravity(0.0f, 10.0f);
     b2World world(gravity);
 
-    createGround(world, 0.0f, 20.0f);
+    createGround(world);
 
     /** Prepare textures */
     sf::Texture GroundTexture;
     sf::Texture BoxTexture;
     GroundTexture.loadFromFile("ground.png");
     BoxTexture.loadFromFile("box.png");
+
+    createBox(world, 300, 0);
+    createBox(world, 300, 20);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -125,8 +128,8 @@ int main(int, char const**) {
 
     //    window.clear(sf::Color::Black);
 
-    //    sprintf(buff, "FPS: %3.2f", framesPerSecond(clock));
-    //    fps.setString(sf::String(buff));
+        sprintf(buff, "FPS: %3.2f", framesPerSecond(clock));
+        fps.setString(sf::String(buff));
 
 
     //    //for (int i=0; i<MAX_SPRITES; i++) {
@@ -137,7 +140,6 @@ int main(int, char const**) {
     //    //}
 
     //    window.draw(text);
-    //    window.draw(fps);
 
     //    window.display();
     //}
@@ -149,6 +151,7 @@ int main(int, char const**) {
             createBox(world, MouseX, MouseY);
         }
         world.Step(1.0f/60.f, 8, 3);
+
 
         window.clear(sf::Color::White);
         int BodyCount = 0;
@@ -164,12 +167,14 @@ int main(int, char const**) {
             } else {
                 sf::Sprite GroundSprite;
                 GroundSprite.setTexture(GroundTexture);
-                GroundSprite.setOrigin(15.0f * SCALE, 0.5f * SCALE);
+                GroundSprite.setColor(sf::Color::Red);
+                GroundSprite.setOrigin(40.0f * SCALE, 1.0f * SCALE);
                 GroundSprite.setPosition(SCALE * BodyIterator->GetPosition().x, SCALE * BodyIterator->GetPosition().y);
                 GroundSprite.setRotation(180/b2_pi * BodyIterator->GetAngle());
                 window.draw(GroundSprite);
             }
         }
+        window.draw(fps);
         window.display();
     }
 
